@@ -6,6 +6,7 @@ import { Post } from "../models/post.model";
 import { Trip } from "../models/trip.model";
 import { User, loginData } from "../models/user.model";
 import { BehaviorSubject } from "rxjs";
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -28,10 +29,12 @@ export class PostsService {
 
 
     //when using backend-http client
-    private tripApiUrl = 'http://localhost:3200/api/trips';
-    private postApiUrl = 'http://localhost:3200/api/posts';
-    private userApiUrl = 'http://localhost:3200/api/users'; //signup api
-    private loginApiUrl = 'http://localhost:3200/api/login';
+
+    private baseUrl = environment.apiUrl;
+    private tripApiUrl = `${this.baseUrl}/api/trips`;
+    private postApiUrl = `${this.baseUrl}/api/posts`;
+    private userApiUrl = `${this.baseUrl}/api/users`; //signup api
+    private loginApiUrl = `${this.baseUrl}/api/login`;
     private userIdSubject = new BehaviorSubject<string | null>(null);
     private userEmailSubject = new BehaviorSubject<string | null>(null);
 

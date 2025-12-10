@@ -20,11 +20,17 @@ mongoose.connect(process.env.MONGO_URI)
   })
 
 // let posts = [];
-
+console.log('MONGO_URI:', process.env.MONGO_URI);
 
 app.use(cors({
-  origin: 'http://localhost:4300'
+  origin: [
+    'http://localhost:4300',
+    'https://journhive-7ium39e99-vyshnavi-dss-projects.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
+
 app.use(bodyParser.json({ limit: '200mb' }));
 app.use(express.json({ limit: '200mb' }));
 
@@ -350,6 +356,6 @@ app.get('/api/login', async(req,res) => {
   }
 })
 
-app.listen(PORT, 'localhost', () => {
+app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
