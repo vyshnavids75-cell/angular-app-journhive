@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = process.env.PORT || 3200;
-mongoose.connect("mongodb+srv://vyshds:fxJpBzflMLmE0ldx@cluster0.yvfz1ue.mongodb.net/node-angular?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to database");
   })
