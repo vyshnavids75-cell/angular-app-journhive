@@ -1,0 +1,55 @@
+<div class="trip-list-wrapper">
+  <div class="trip-list" *ngIf="paginatedPosts.length > 0; else noPosts">
+    <div class="trip-card" *ngFor="let trip of paginatedPosts">
+      <div class="trip-image-wrapper" *ngIf="trip.coverPhoto">
+        <img [src]="trip.coverPhoto" class="trip-image" alt="Trip image" />
+      </div>
+
+      <div class="trip-content">
+        <h3 class="trip-title">{{ trip.destination }}</h3>
+
+        <p class="trip-dates">
+          {{ trip.startDate }} – {{ trip.endDate }}
+        </p>
+
+        <button class="view-trip-button" (click)="viewTrip(trip)">
+          View Trip
+        </button>
+
+        <div class="trip-footer">
+          <div class="trip-places">
+           <mat-icon>location_on</mat-icon>
+           <span class="trip-count">
+            {{ trip.postsCount || 0 }}
+            {{ (trip.postsCount || 0) === 1 ? 'Travel spot' : 'Travel spots' }}
+           </span>
+          </div>
+          <div class="trip-actions">
+            <button mat-icon-button [routerLink]="['/edit-trip', trip.id || trip._id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button (click)="deletePost(trip.id || trip._id)" class="delete-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noPosts>
+    <div class="no-post">
+      <p class="no-trip-text">No posts found. Create your first trip!</p>
+    </div>
+  </ng-template>
+
+  <mat-paginator
+    *ngIf="paginatedPosts.length > 0"
+    class="paginator"
+    [length]="totalPosts"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="filteredPageSizeOptions"
+    (page)="onChangePage($event)">
+  </mat-paginator>
+</div>

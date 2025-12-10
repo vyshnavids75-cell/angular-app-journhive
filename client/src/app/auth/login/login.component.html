@@ -1,0 +1,52 @@
+<div class="login-page-wrapper">
+    <div class="login-card">
+        <div class="form-panel">
+            <h2 class="hello-text">Hello!</h2>
+            <p class="sign-text">Log into your account</p>
+
+            <form class="login-form" (ngSubmit)="onLogin()" #form="ngForm">
+
+                <mat-form-field appearance="outline" class="input-field">
+                    <mat-icon matPrefix>mail_outline</mat-icon>
+                    <mat-label class="label-email">E-mail</mat-label>
+                    <input matInput type="email" class="email-input" name="email" [(ngModel)]="email" autocomplete="off" (blur)="validateEmail()"
+                     (input)="resetEmail()" required email/>
+                </mat-form-field>
+                <p *ngIf="validEmail === false && email" class="error-text">Please enter a valid email</p>
+                <p *ngIf="userNotFound && validEmail" class="error-text">User not found</p>
+
+                <div class="password-input-wrapper">
+                    <mat-form-field appearance="outline" class="input-field">
+                        <mat-icon matPrefix>lock_outline</mat-icon>
+                        <mat-label class="label-password">Password</mat-label>
+                        <input matInput [type]="showPassword ? 'text' : 'password'" class="password-input" name="password" [(ngModel)]="password"
+                            autocomplete="off" (input)="resetPassword()" (copy)="disableCopyPaste($event)" (paste)="disableCopyPaste($event)" required />
+                    </mat-form-field>
+                    <mat-icon class="password-icon" (click)="togglePassword()">
+                        {{ showPassword ? 'visibility' : 'visibility_off' }}
+                    </mat-icon>
+                </div>
+                <p *ngIf="incorrectPassword" class="error-text">Email and password doesn't match</p>
+
+                <p class="forgot-password"><a (click)="navigateToForgotPassword()"> Forgot password? </a></p>
+
+                <button mat-raised-button color="primary" class="login-btn" type="submit"
+                    [disabled]="form.invalid || !validEmail">
+                    LOGIN
+                </button>
+            </form>
+
+            <p class="have-account">New user?
+                <a class="login-link" (click)="navigateToSignup()">Sign up</a>
+            </p>
+        </div>
+
+        <div class="welcome-panel">
+            <h1 class="app-logo-panel">JOURNHIVE</h1>
+            <h2 class="welcome-text">Welcome Back!</h2>
+            <p class="welcome-subtext">
+                Welcome back to JournHive — your personal travel hive for collecting moments, photos, and memories. Document your adventures your way, all in one place.
+            </p>
+        </div>
+    </div>
+</div>

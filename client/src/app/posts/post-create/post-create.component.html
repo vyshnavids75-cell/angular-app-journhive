@@ -1,0 +1,70 @@
+<div class="create-entry-container">
+  <div class="create-card">
+    <h2 class="create-title">{{ mode === 'create' ? "Add a new place" : "Edit the place" }}</h2>
+    <div class="modal-close" (click)="cancelClick()">
+      <button mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="create-grid">
+      <div class="create-image-section">
+        <div class="create-upload-box" [class.image-added]="imagePreview">
+          <ng-container *ngIf="!imagePreview">
+            <button mat-stroked-button color="primary" (click)="uploadImg.click()">
+              📸 Upload Image
+            </button>
+            <p class="hint-text">Choose an image</p>
+          </ng-container>
+          <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" />
+        </div>
+        <button *ngIf="imagePreview" mat-stroked-button color="primary" class="change-image-btn" (click)="uploadImg.click()">
+          📸 Change Image
+        </button>
+        <mat-checkbox [(ngModel)]="post.skipImage" (change)="onCheckedSkipImage($event)">Skip image</mat-checkbox>
+        <input type="file" #uploadImg accept="image/*" (change)="onFileSelected($event)" hidden>
+      </div>
+
+      <div class="create-form-section">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Place</mat-label>
+          <input matInput [(ngModel)]="post.title" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width caption-field">
+          <mat-label>Travel Notes</mat-label>
+          <textarea matInput rows="3" [(ngModel)]="post.caption"></textarea>
+        </mat-form-field>
+
+        <div class="value-section">
+          <label class="value-label">Perceived Value</label>
+          <div class="value-list">
+            <button
+              *ngFor="let value of values"
+              mat-stroked-button
+              [class.selected]="post.value === value.name"
+              (click)="post.value = value.name">
+              <span class="value-emoji">{{ value.emoji }}</span>
+              <p>{{ value.name }}</p>
+            </button>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date Of Visit</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="post.date"
+            placeholder="Choose a date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="submit-btn" (click)="savePost()" [disabled]="!post.title || !post.caption || !post.value">
+          {{ mode === 'create' ? "➕ Add Entry" : "Update Entry" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

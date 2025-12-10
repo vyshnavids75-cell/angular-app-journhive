@@ -1,0 +1,63 @@
+<div class="create-entry-container">
+  <div class="create-card">
+    <h2 class="create-title">{{ mode === 'create' ? "Add a new place" : "Edit the place" }}</h2>
+    <div class="modal-close" (click)="cancelClick()">
+      <button mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="create-grid">
+      <div class="create-image-section">
+        <div class="create-upload-box" [class.image-added]="imagePreview">
+          <ng-container *ngIf="!imagePreview">
+            <button mat-stroked-button color="primary" (click)="uploadImg.click()">
+              📸 Upload Image
+            </button>
+            <p class="hint-text">Choose an image</p>
+          </ng-container>
+          <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" />
+        </div>
+        <button *ngIf="imagePreview" mat-stroked-button color="primary" class="change-image-btn" (click)="uploadImg.click()">
+          📸 Change Image
+        </button>
+        <mat-checkbox [(ngModel)]="trip.skipImage" (change)="onCheckedSkipImage($event)">Skip image</mat-checkbox>
+        <input type="file" #uploadImg accept="image/*" (change)="onFileSelected($event)" hidden>
+      </div>
+
+      <div class="create-form-section">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Travel Spot</mat-label>
+          <input matInput [(ngModel)]="trip.destination" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [(ngModel)]="trip.startDate"
+            placeholder="Choose a date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>End Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            [(ngModel)]="trip.endDate"
+            placeholder="Choose a date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="submit-btn" (click)="addTrip()">
+          {{ mode === 'create' ? "➕ Add Entry" : "Update Entry" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

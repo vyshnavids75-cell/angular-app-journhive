@@ -1,0 +1,43 @@
+<mat-toolbar class="header-bar">
+
+   <div class="arrow-placeholder">
+      <button *ngIf="showArrowBack()" class="arrow-btn" mat-icon-button (click)="navigateToLists()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+    </div>
+
+  <div class="left-section">
+    <div class="brand">
+      <img src="assets/images/journhive-applogo.png" class="brand-logo" alt="logo" />
+      <div class="app-title"><a routerLink="/trips" class="brand-name">JournHive</a></div>
+    </div>
+  </div>
+
+  <div class="right-section">
+    <button *ngIf="showDownloadButton()" mat-button class="download-post" (click)="onDownloadPosts()">
+      <mat-icon>download</mat-icon>
+      Download
+    </button>
+
+    <button mat-button class="new-post" (click)="navigateToCreate()">
+      {{ buttonLabel }}
+    </button>
+
+    <button class="profile-btn" mat-icon-button (click)="toggleUserMenu()">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
+
+  <div class="user-menu" *ngIf="showUserMenu">
+    <div class="user-info">
+      <mat-icon>person</mat-icon>
+      <span class="user-name">{{ userEmailId }}</span>
+    </div>
+
+    <button class="logout-button" mat-button color="warn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </div>
+
+</mat-toolbar>

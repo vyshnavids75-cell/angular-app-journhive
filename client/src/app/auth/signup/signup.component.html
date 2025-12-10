@@ -1,0 +1,56 @@
+<div class="signup-page-wrapper">
+    <div class="signup-card">
+        <div class="form-panel">
+            <h2 class="hello-text">Hello!</h2>
+            <p class="sign-text">Sign up to create your account</p>
+
+            <form class="signup-form" (ngSubmit)="onSignup()" #form="ngForm">
+
+                <mat-form-field appearance="outline" class="input-field">
+                    <mat-icon matPrefix>person_outline</mat-icon>
+                    <mat-label class="label-name">Name</mat-label>
+                    <input matInput type="text" class="name-input" name="name" [(ngModel)]="name" autocomplete="off" required />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="input-field">
+                    <mat-icon matPrefix>mail_outline</mat-icon>
+                    <mat-label class="label-email">E-mail</mat-label>
+                    <input matInput type="email" class="email-input" name="email" [(ngModel)]="email" autocomplete="off" (blur)="onEmailBlur()"
+                        (input)="resetInput()" required email />
+                </mat-form-field>
+                <p *ngIf="emailExists" class="error-message">Email already exists</p>
+                <p *ngIf="validEmail === false && email" class="error-message">Please enter a valid email</p>
+
+                <div class="password-input-wrapper">
+                    <mat-form-field appearance="outline" class="input-field">
+                        <mat-icon matPrefix>lock_outline</mat-icon>
+                        <mat-label class="label-password">Password</mat-label>
+                        <input matInput class="password-input" [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password"  (ngModelChange)="validatePassword()"
+                            autocomplete="off" (copy)="disableCopyPaste($event)" (paste)="disableCopyPaste($event)" required />
+                    </mat-form-field>
+                    <mat-icon class="password-icon" (click)="togglePassword()">
+                        {{ showPassword ? 'visibility' : 'visibility_off' }}
+                    </mat-icon>
+                </div>
+                <p *ngIf="validPassword === false && password" class="error-message">Password must contain at least 8 characters</p>
+
+                <button mat-raised-button color="primary" class="signup-btn" type="submit"
+                    [disabled]="form.invalid || emailExists || !validEmail || !validPassword">
+                    SIGN UP
+                </button>
+            </form>
+
+            <p class="have-account">Already have an account?
+                <a class="login-link" (click)="navigateToLogin()">Login</a>
+            </p>
+        </div>
+
+        <div class="welcome-panel">
+            <h1 class="app-logo-panel">JOURNHIVE</h1>
+            <h2 class="welcome-text">Create Account!</h2>
+            <p class="welcome-subtext">
+                Sign up to JournHive to begin your journey with JournHive. Save memories as they happen and turn your travels into stories you’ll love revisiting.
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<div #postListSection>
+  <div class="post-list-wrapper">
+    <div class="post-list" *ngIf="paginatedPosts.length > 0; else noPosts">
+      <div class="post-card" *ngFor="let post of paginatedPosts">
+        <div class="post-image-wrapper" *ngIf="post.image; else noImage">
+          <img [src]="post.image" class="post-image" alt="Post image" crossorigin="anonymous" />
+        </div>
+        <ng-template #noImage>
+          <div class="no-image">
+            <p class="no-image-text">No image uploaded</p>
+          </div>
+        </ng-template>
+
+        <div class="post-content">
+          <h3 class="post-title">{{ post.title }}</h3>
+          <p class="post-caption">{{ post.caption }}</p>
+
+          <div class="post-value" *ngIf="post.value">
+            <span class="value-badge" [ngClass]="{
+              'value-worth-it': post.value === 'Totally Worth It',
+              'value-worthwhile': post.value === 'Worth Once',
+              'value-barely': post.value === 'Missed Out',
+              'value-not': post.value === 'Not Worth It'
+            }">
+              <mat-icon *ngIf="post.value === 'Totally Worth It'">check_circle</mat-icon>
+              <mat-icon *ngIf="post.value === 'Worth Once'">star</mat-icon>
+              <mat-icon *ngIf="post.value === 'Missed Out'">radio_button_unchecked</mat-icon>
+              <mat-icon *ngIf="post.value === 'Not Worth It'">cancel</mat-icon>
+              {{ post.value }}
+            </span>
+          </div>
+
+          <div class="post-footer">
+            <div class="post-date">
+              <mat-icon>event</mat-icon>
+              <span>{{ post.date | date: 'mediumDate' }}</span>
+            </div>
+            <div class="post-actions">
+              <button mat-icon-button color="primary" [routerLink]="['/edit', post.id]" matTooltip="Edit Post">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deletePost(post.id)" matTooltip="Delete Post"
+                class="delete-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noPosts>
+      <div class="no-post">
+        <p class="no-post-text">No posts found. Create your first one!</p>
+      </div>
+    </ng-template>
+
+    <mat-paginator *ngIf="paginatedPosts.length > 0" class="paginator" [length]="totalPosts" [pageSize]="pageSize"
+      [pageSizeOptions]="filteredPageSizeOptions" (page)="onChangePage($event)">
+    </mat-paginator>
+  </div>
+</div>

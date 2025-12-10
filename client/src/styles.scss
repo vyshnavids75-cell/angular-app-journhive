@@ -1,0 +1,124 @@
+@import "~ngx-toastr/toastr.css";
+
+html, body { 
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(145deg, #cadcfc, #8ab6f9) !important;
+    overflow: hidden;
+}
+
+body { 
+    margin: 0px!important;
+}
+
+app-root, .main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(145deg, #cadcfc, #8ab6f9);
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+.mat-form-field-underline {
+  background-color: #347cb8 !important;
+}
+
+.mat-form-field-ripple {
+  background-color: #3b6ab2 !important;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    border-width: 1px !important;
+}
+
+.mat-mdc-text-field-wrapper:focus-within,
+.mat-mdc-text-field-wrapper.mdc-text-field--focused {
+    box-shadow: none !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch {
+        border-color: rgba(255, 255, 255, 0.7) !important; 
+        border-width: 1px !important; 
+    }
+}
+
+.mat-mdc-form-field-focus-overlay {
+    background-color: transparent !important;
+}
+
+.mat-mdc-input-element:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.mat-mdc-input-element:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-flex {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: rgba(0,0,0,.12) !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-prefix, .mat-form-field-appearance-outline .mat-form-field-suffix {
+    top: 0px !important;
+}
+
+.mat-paginator {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #f5f5f5;
+  color: #3859eb;
+  margin-bottom: 50px;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.mat-paginator-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 35px;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+.mat-paginator-page-size {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.mat-paginator-range-actions {
+  display: flex;
+  align-items: center;
+}
+
+.mat-paginator-page-size-label {
+  margin-right: 8px;
+}
+
+.mat-select-value {
+  color: #3859eb !important;
+  font-weight: 500;
+}
