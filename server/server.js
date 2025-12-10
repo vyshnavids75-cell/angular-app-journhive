@@ -11,16 +11,16 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = process.env.PORT || 3200;
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Connected to database");
-  })
-  .catch((err) => {
-    console.log("Db connection failed",err.message);
-  })
+mongoose.connect(process.env.MONGO_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+  .then(() => console.log("Connected to database"))
+  .catch(err => console.error("Db connection failed:", err.message));
+
+console.log('Using MONGO_URI:', process.env.MONGO_URI);
 
 // let posts = [];
-console.log('MONGO_URI:', process.env.MONGO_URI);
 
 app.use(cors({
   origin: [
@@ -320,10 +320,12 @@ app.post('/api/users', upload.none(), async (req, res) => { //signup api
 
 app.get('/api/users', async (req,res) => {
   try {
-    const fetchUsers = await User.find();
-    res.status(201).json({message: 'Fetched Users succesfully', users: fetchUsers});
-  } catch(error) {
-    res.status(500).json({message: 'User fetch failed', error: error})
+    const users = await User.find();
+    console.log("Fetched Users:", users);
+    res.status(200).json({ message: 'Fetched Users successfully', users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: 'User fetch failed', error });
   }
 })
 
@@ -331,18 +333,17 @@ app.post('/api/login', upload.none(), async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'User not found' });
-    }
+
+    if (!user) return res.status(400).json({ message: 'User not found' });
+
     const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(401).json({ message: 'Incorrect password' });
-    }
-    res.status(200).json({ message: 'Login successful', user: user })
-    
+    if (!match) return res.status(401).json({ message: 'Incorrect password' });
+
+    console.log("Login successful for user:", user.email);
+    res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
     console.error('LOGIN ERROR:', error);
-    res.status(500).json({ message: 'Login failed', error: error })
+    res.status(500).json({ message: 'Login failed', error });
   }
   
 })
