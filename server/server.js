@@ -4,23 +4,40 @@ const cors = require('cors');
 const Post = require('./models/post');
 const Trip = require('./models/trip');
 const mongoose = require('mongoose');
-const multer = require('multer');
 const path = require('path');
 const User = require('./models/user');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const PORT = process.env.PORT || 3200;
-mongoose.connect(process.env.MONGO_URI, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'journhive',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp']
+  }
+});
+
+const upload = multer({ storage });
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 })
   .then(() => console.log("Connected to database"))
   .catch(err => console.error("Db connection failed:", err.message));
 
 console.log('Using MONGO_URI:', process.env.MONGO_URI);
-
-// let posts = [];
 
 app.use(cors({
   origin: [
@@ -35,28 +52,9 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '200mb' }));
 app.use(express.json({ limit: '200mb' }));
 
-app.use((req, res, next) => {
-  // console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  }
-});
-const upload = multer({ storage: storage });
-
 app.post('/api/trips', upload.single('coverPhoto'), async (req, res) => {
   try {
-    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
-      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
-      : `${req.protocol}://${req.get('host')}`;
-    const coverPhotoPath = req.file ? `${url}/uploads/${req.file.filename}` : null;
+    const coverPhotoPath = req.file ? req.file.path : null;
 
     const trip = new Trip({
       destination: req.body.destination,
@@ -65,6 +63,7 @@ app.post('/api/trips', upload.single('coverPhoto'), async (req, res) => {
       coverPhoto: coverPhotoPath,
       creatorId: req.body.creatorId
     });
+
     const savedTrips = await trip.save();
     res.status(201).json({ message: 'Trip added successfully', trips: savedTrips });
   } catch (error) {
@@ -74,10 +73,7 @@ app.post('/api/trips', upload.single('coverPhoto'), async (req, res) => {
 
 app.post('/api/posts', upload.single('image'), async (req, res) => {
   try {
-    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
-      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
-      : `${req.protocol}://${req.get('host')}`;
-    const imagePath = req.file ? `${url}/uploads/${req.file.filename}` : null;
+    const imagePath = req.file ? req.file.path : null;
 
     const post = new Post({
       title: req.body.title,
@@ -153,32 +149,24 @@ app.get('/api/trips/creator/:creatorId', async (req, res) => {
 app.delete('/api/posts/:id', async (req, res) => {
   try {
     const result = await Post.deleteOne({ _id: req.params.id });
-    
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Post not found' });
     }
-
-    res.status(200).json({
-      message: 'Post deleted successfully'
-    });
+    res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting post', error: error.message })
+    res.status(500).json({ message: 'Error deleting post', error: error.message });
   }
-})
+});
 
 app.delete('/api/trips/:tripId', async (req, res) => {
   try {
     const result = await Trip.deleteOne({ _id: req.params.tripId });
-
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Trip not found' });
     }
-
-    res.status(200).json({
-      message: 'Trip deleted successfully'
-    });
+    res.status(200).json({ message: 'Trip deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting trip', error: error.message })
+    res.status(500).json({ message: 'Error deleting trip', error: error.message });
   }
 });
 
@@ -196,12 +184,9 @@ app.get('/api/posts/:id', async (req, res) => {
         date: post.date,
         tripId: post.tripId || null,
         creatorId: post.creatorId
-      })
-    }
-    else {
-      res.status(404).json({
-        message: 'Post not found'
       });
+    } else {
+      res.status(404).json({ message: 'Post not found' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Error fetching post', error: error.message });
@@ -222,9 +207,7 @@ app.get('/api/trips/:id', async (req, res) => {
         creatorId: trip.creatorId
       });
     } else {
-      res.status(404).json({
-        message: 'Trip not found'
-      });
+      res.status(404).json({ message: 'Trip not found' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Error fetching trip', error: error.message });
@@ -233,14 +216,10 @@ app.get('/api/trips/:id', async (req, res) => {
 
 app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
   try {
-    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
-      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
-      : `${req.protocol}://${req.get('host')}`;
     let imagePath = req.body.image;
 
-    // If a new image was uploaded
     if (req.file) {
-      imagePath = `${url}/uploads/${req.file.filename}`;
+      imagePath = req.file.path;
     }
 
     const updatedPost = {
@@ -261,24 +240,18 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
       res.status(404).json({ message: 'Post not found or no changes made' });
     }
   } catch (error) {
-    console.error('Error updating post:', error);
     res.status(500).json({ message: 'Error updating post', error: error.message });
   }
 });
 
 app.put('/api/trips/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
-      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
-      : `${req.protocol}://${req.get('host')}`;
     let imagePath = req.body.coverPhoto;
 
-    // If a new image was uploaded
     if (req.file) {
-      imagePath = `${url}/uploads/${req.file.filename}`;
+      imagePath = req.file.path;
     }
 
-    // If skipImage was checked, or coverPhoto was explicitly cleared, remove image
     if (req.body.skipImage === 'true' || imagePath === '') {
       imagePath = null;
     }
@@ -297,46 +270,28 @@ app.put('/api/trips/:id', upload.single('coverPhoto'), async (req, res) => {
       return res.status(404).json({ message: 'Trip not found' });
     }
 
-    // Even if no fields actually changed, consider the operation successful
     res.status(200).json({ message: 'Trip updated successfully', trip: updatedTrip });
   } catch (error) {
-    console.error('Error updating trip:', error);
     res.status(500).json({ message: 'Error updating trip', error: error.message });
   }
 });
 
-
-app.post('/api/users', upload.none(), async (req, res) => { //signup api
+app.post('/api/users', upload.none(), async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
     const user = new User({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword
-    })
+    });
 
     const savedUser = await user.save();
-    res.status(201).json({
-      message: 'Signup successfull', user: savedUser
-    });
+    res.status(201).json({ message: 'Signup successfull', user: savedUser });
   } catch (error) {
-    res.status(500).json({
-      message: 'Signup failed', error: error
-    });
+    res.status(500).json({ message: 'Signup failed', error });
   }
-
-})
-
-app.get('/api/users', async (req,res) => {
-  try {
-    const users = await User.find();
-    console.log("Fetched Users:", users);
-    res.status(200).json({ message: 'Fetched Users successfully', users });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ message: 'User fetch failed', error });
-  }
-})
+});
 
 app.post('/api/login', upload.none(), async (req, res) => {
   try {
@@ -348,23 +303,11 @@ app.post('/api/login', upload.none(), async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ message: 'Incorrect password' });
 
-    console.log("Login successful for user:", user.email);
     res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
-    console.error('LOGIN ERROR:', error);
     res.status(500).json({ message: 'Login failed', error });
   }
-  
-})
-
-app.get('/api/login', async(req,res) => {
-  try {
-   const user = await User.find();
-   res.status(201).json({message: 'Fetched Users succesfully', users: user})
-  }catch(error) {
-    res.status(500).json({message: 'User fetch failed', error: error})
-  }
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
