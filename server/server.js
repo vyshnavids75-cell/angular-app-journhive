@@ -25,7 +25,8 @@ console.log('Using MONGO_URI:', process.env.MONGO_URI);
 app.use(cors({
   origin: [
     'http://localhost:4300',
-    'https://journhive-7ium39e99-vyshnavi-dss-projects.vercel.app'
+    'https://journhive-7ium39e99-vyshnavi-dss-projects.vercel.app',
+    'https://journhive-33.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
@@ -52,7 +53,9 @@ const upload = multer({ storage: storage });
 
 app.post('/api/trips', upload.single('coverPhoto'), async (req, res) => {
   try {
-    const url = `${req.protocol}://${req.get('host')}`;
+    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
+      : `${req.protocol}://${req.get('host')}`;
     const coverPhotoPath = req.file ? `${url}/uploads/${req.file.filename}` : null;
 
     const trip = new Trip({
@@ -71,7 +74,9 @@ app.post('/api/trips', upload.single('coverPhoto'), async (req, res) => {
 
 app.post('/api/posts', upload.single('image'), async (req, res) => {
   try {
-    const url = `${req.protocol}://${req.get('host')}`;
+    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
+      : `${req.protocol}://${req.get('host')}`;
     const imagePath = req.file ? `${url}/uploads/${req.file.filename}` : null;
 
     const post = new Post({
@@ -228,7 +233,9 @@ app.get('/api/trips/:id', async (req, res) => {
 
 app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
   try {
-    const url = `${req.protocol}://${req.get('host')}`;
+    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
+      : `${req.protocol}://${req.get('host')}`;
     let imagePath = req.body.image;
 
     // If a new image was uploaded
@@ -261,7 +268,9 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
 
 app.put('/api/trips/:id', upload.single('coverPhoto'), async (req, res) => {
   try {
-    const url = `${req.protocol}://${req.get('host')}`;
+    const url = process.env.RAILWAY_PUBLIC_DOMAIN 
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` 
+      : `${req.protocol}://${req.get('host')}`;
     let imagePath = req.body.coverPhoto;
 
     // If a new image was uploaded
