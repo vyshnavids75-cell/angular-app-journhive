@@ -174,17 +174,17 @@
 }
 
 .submit-btn:disabled {
-  background-color: #a8c8ff !important;
-  color: #eaf0ff !important;
-  cursor: not-allowed !important;
-  box-shadow: none !important;
-  opacity: 1;
+  background-color: #bcd2ff;
+  color: #f1f5ff;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.75;
 }
 
 .submit-btn:disabled:hover {
-  background-color: #a8c8ff !important;
+  background-color: #bcd2ff;
+  color: #f1f5ff;
 }
-
 
 .modal-close {
   position: absolute;

@@ -1,5 +1,23 @@
 <div class="trip-list-wrapper">
-  <div class="trip-list" *ngIf="paginatedPosts.length > 0; else noPosts">
+<!--loader for trip list-->
+  <div *ngIf="isLoading" class="trip-list skeleton-list">
+    <div class="trip-card skeleton-card" *ngFor="let item of [1,2,3,4,5,6]">
+
+      <div class="trip-image-wrapper skeleton-block"></div>
+
+      <div class="trip-content">
+        <div class="skeleton-title skeleton-block"></div>
+        <div class="skeleton-date skeleton-block"></div>
+
+        <div class="trip-footer">
+          <div class="skeleton-small skeleton-block"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="trip-list" *ngIf="!isLoading && paginatedPosts.length > 0; else noPosts">
     <div class="trip-card" *ngFor="let trip of paginatedPosts">
       <div class="trip-image-wrapper" *ngIf="trip.coverPhoto">
         <img [src]="trip.coverPhoto" class="trip-image" alt="Trip image" />

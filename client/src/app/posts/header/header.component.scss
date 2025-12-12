@@ -18,6 +18,7 @@
   gap: 10px;
   flex: 1;
 }
+
 .arrow-btn {
   height: 40px;
   display: flex;
@@ -88,23 +89,7 @@
   gap: 16px;
 }
 
-.new-post {
-  background: linear-gradient(135deg, #3447d4, #4c6fff);
-  color: white;
-  padding: 7px 22px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: none;
-  box-shadow: 0 4px 16px rgba(70, 96, 255, 0.4);
-  transition: 0.2s ease;
-}
-
-.new-post:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 7px 20px rgba(70, 96, 255, 0.55);
-}
-
+.new-post,
 .download-post {
   background: linear-gradient(135deg, #3447d4, #4c6fff);
   color: white;
@@ -117,6 +102,7 @@
   transition: 0.2s ease;
 }
 
+.new-post:hover,
 .download-post:hover {
   transform: translateY(-2px);
   box-shadow: 0 7px 20px rgba(70, 96, 255, 0.55);
@@ -198,5 +184,97 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-bar {
+    padding: 0 16px;
+  }
+  .brand-name {
+    font-size: 30px;
+  }
+  .brand-logo {
+    height: 34px;
+    width: 42px;
+  }
+  .new-post,
+  .download-post {
+    padding: 6px 18px;
+    font-size: 13px;
+  }
+  .right-section {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-bar {
+    height: 60px;
+    padding: 0 14px;
+  }
+  .arrow-placeholder {
+    width: 0;
+  }
+  .brand {
+    gap: 4px;
+    margin-left: 2px;
+  }
+  .brand-logo {
+    height: 32px;
+    width: 38px;
+  }
+  .brand-name {
+    font-size: 24px;
+    margin-left: -5px;
+  }
+  .new-post,
+  .download-post {
+    display: none;
+  }
+  .right-section {
+    gap: 10px;
+  }
+  .profile-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .profile-btn mat-icon {
+    font-size: 26px;
+  }
+  .user-menu {
+    right: 10px;
+    top: 64px;
+    min-width: 160px;
+    padding: 12px;
+  }
+  .user-info {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-bar {
+    height: 55px;
+    padding: 0 10px;
+  }
+  .brand-logo {
+    height: 28px;
+    width: 34px;
+  }
+  .brand-name {
+    font-size: 20px;
+  }
+  .profile-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .profile-btn mat-icon {
+    font-size: 24px;
+  }
+  .user-menu {
+    right: 5px;
+    top: 60px;
+    min-width: 150px;
   }
 }

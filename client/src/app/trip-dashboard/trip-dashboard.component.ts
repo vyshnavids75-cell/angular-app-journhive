@@ -20,6 +20,7 @@ export class TripDashboardComponent implements OnInit {
   paginatedPosts: any[] = [];
   userId: string = '';
   public tripListArray: any[] = [];
+  isLoading: boolean = true;
 
   constructor(private postsService: PostsService, private router: Router) {
     this.fetchPosts();
@@ -30,6 +31,7 @@ export class TripDashboardComponent implements OnInit {
   }
 
   fetchPosts() {
+    this.isLoading = true;
     this.postsService.getUserId().subscribe((id) => {
       if (!id) {
         return;
@@ -59,6 +61,7 @@ export class TripDashboardComponent implements OnInit {
           this.totalPosts = this.tripListArray.length;
           this.updatePaginatedPosts();
           this.disablePageSizeOptions();
+          this.isLoading = false; 
         });
       });
     });
@@ -93,7 +96,7 @@ export class TripDashboardComponent implements OnInit {
       return;
     }
     this.router.navigate(['/trips', tripId], {
-      state: { tripName: trip.destination}
+      queryParams: { tripName: trip.destination}
     });
   }
 

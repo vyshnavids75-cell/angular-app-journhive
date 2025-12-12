@@ -1,6 +1,23 @@
 <div #postListSection>
   <div class="post-list-wrapper">
-    <div class="post-list" *ngIf="paginatedPosts.length > 0; else noPosts">
+    <!--loader for trip list-->
+  <div *ngIf="isLoading" class="trip-list skeleton-list">
+    <div class="trip-card skeleton-card" *ngFor="let item of [1,2,3,4,5,6]">
+
+      <div class="trip-image-wrapper skeleton-block"></div>
+
+      <div class="trip-content">
+        <div class="skeleton-title skeleton-block"></div>
+        <div class="skeleton-date skeleton-block"></div>
+
+        <div class="trip-footer">
+          <div class="skeleton-small skeleton-block"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+    <div class="post-list" *ngIf="!isLoading && paginatedPosts.length > 0; else noPosts">
       <div class="post-card" *ngFor="let post of paginatedPosts">
         <div class="post-image-wrapper" *ngIf="post.image; else noImage">
           <img [src]="post.image" class="post-image" alt="Post image" crossorigin="anonymous" />

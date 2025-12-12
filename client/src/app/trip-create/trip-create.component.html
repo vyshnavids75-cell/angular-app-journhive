@@ -54,7 +54,7 @@
           <mat-datepicker #endPicker></mat-datepicker>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" class="submit-btn" (click)="addTrip()">
+        <button mat-raised-button color="primary" class="submit-btn" (click)="addTrip()" [disabled]="!trip.destination || !trip.startDate || !trip.endDate">
           {{ mode === 'create' ? "➕ Add Entry" : "Update Entry" }}
         </button>
       </div>

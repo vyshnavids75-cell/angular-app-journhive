@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -36,8 +37,6 @@ mongoose.connect(process.env.MONGO_URI, {
 })
   .then(() => console.log("Connected to database"))
   .catch(err => console.error("Db connection failed:", err.message));
-
-console.log('Using MONGO_URI:', process.env.MONGO_URI);
 
 app.use(cors({
   origin: [
@@ -234,11 +233,12 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
 
     const result = await Post.updateOne({ _id: req.params.id }, updatedPost);
 
-    if (result.modifiedCount > 0) {
-      res.status(200).json({ message: 'Post updated successfully', post: updatedPost });
-    } else {
-      res.status(404).json({ message: 'Post not found or no changes made' });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Post not found' });
     }
+    res.status(200).json({ message: result.modifiedCount > 0 ? 'Post updated successfully': 'No changes made', post: updatedPost
+    });
+
   } catch (error) {
     res.status(500).json({ message: 'Error updating post', error: error.message });
   }

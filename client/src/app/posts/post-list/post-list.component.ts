@@ -32,6 +32,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   paginatedPosts: Post[] = [];
   tripId: string | null = null;
   tripName: string | null = null;
+  isLoading: boolean = true;
 
   private downloadSubscription: any;
 
@@ -42,13 +43,17 @@ export class PostListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const nav = history.state;
-    if( nav && nav.tripName) {
-      this.tripName = nav.tripName.toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-');;
-    }
-
+    this.route.queryParamMap.subscribe((params) => {
+      const name = params.get('tripName');   //showing destination name in download pdf file name
+      if (name) {
+        this.tripName = name.toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/\s+/g, '-');
+      } else {
+        this.tripName = 'unknown-trip'; 
+      }
+    });
+    
     this.route.paramMap.subscribe((paramMap) => {
       this.tripId = paramMap.get('tripId');
       this.fetchPosts();
@@ -67,6 +72,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   fetchPosts() {
+    this.isLoading = true;
     if (!this.tripId) {
       this.postListArray = [];
       this.paginatedPosts = [];
@@ -81,6 +87,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.updatePaginatedPosts();
       this.disablePageSizeOptions();
     });
+    this.isLoading = false;
   }
 
   deletePost(postId: string) {
@@ -205,7 +212,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   
         pdf.setDrawColor(180);
         pdf.setLineWidth(0.4);
-        pdf.roundedRect(x, y, colWidth, cardHeight, 3, 3);
+        pdf.roundedRect(x, y, colWidth, cardHeight, 3, 3, "S");
   
         if (imgData) {
           try {

@@ -143,7 +143,8 @@ export class PostCreateComponent implements OnInit {
           }
         },
         (err) => {
-          this.toastr.error('Post update failed: ', err);
+          const msg = err?.error?.message || 'Post update failed';
+          this.toastr.error(msg, 'Error');
         }
       );
     }
